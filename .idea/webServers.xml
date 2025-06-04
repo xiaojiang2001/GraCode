@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="04d27348-8e53-40bf-a35f-25fd7416da85" name="code_extreme">
+        <fileTransfer rootFolder="/home/groupyun" accessType="SFTP" host="59.110.156.148" port="10022" sshConfigId="a36498af-6c3f-4595-8e8e-8377a03b0ca3" sshConfig="groupyun@59.110.156.148:10022 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="32f14cd5-a39c-459e-bfce-ce9c1f8592f8" name="dell_3090">
+        <fileTransfer rootFolder="/home/dell" accessType="SFTP" host="z2mp9gsh3.neiwangyun.net" port="49582" sshConfigId="7ecd8e7d-b89a-4712-ae8a-2798e3c1322c" sshConfig="dell@z2mp9gsh3.neiwangyun.net:49582 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

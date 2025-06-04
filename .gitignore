@@ -1,0 +1,9 @@
+M3FDv3_/
+M3FDv3/*
+test/
+test/*
+test.zip
+runs/
+runs/*
+*.pth
+*.zip

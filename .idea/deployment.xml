@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="dell_3090" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="code_extreme">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/桌面/sdd_new/code_extreme" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="dell_3090">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/桌面/sdd/code_Extreme" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
