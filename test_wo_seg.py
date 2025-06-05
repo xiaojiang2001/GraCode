@@ -7,7 +7,7 @@ from tqdm import tqdm
 from dataloder.data_loder_test import llvip
 from models.resnet_wo_seg_head import ResNetSegmentationModelWithMoE
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 import numpy as np
 from PIL import Image
 

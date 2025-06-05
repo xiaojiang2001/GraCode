@@ -12,15 +12,12 @@ import numpy as np
 from PIL import Image
 
 
-
-
 if __name__ == '__main__':
-
 
     batch_size = 1
     num_works = 1
     datastes = 'test/M3FD2'
-    save_path = os.path.join(datastes, 'ours')
+    save_path = os.path.join(datastes, 'myself')
 
     test_dataset = llvip(data_dir=datastes)
     test_loader = DataLoader(
@@ -35,10 +32,8 @@ if __name__ == '__main__':
 
     model = ResNetSegmentationModelWithMoE().cuda()
     test_epoch = 0
-    model.load_state_dict(torch.load(f'runs/funetune.pth'))
+    model.load_state_dict(torch.load(f'runs/fusion_25.pth'))
     model.eval()
-
-
 
 
     ##########加载数据

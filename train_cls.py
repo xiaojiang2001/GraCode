@@ -1,6 +1,6 @@
 import argparse
 import os
-os.environ["CUDA_VISIBLE_DEVICES"]='1'
+os.environ["CUDA_VISIBLE_DEVICES"]='0'
 import random
 
 import numpy as np
@@ -46,9 +46,10 @@ def init_seeds(seed=0):
 
 
 if __name__ == '__main__':
+    print(torch.cuda.is_available())
     init_seeds(2222)
-    dataset_path = '/home/dell/桌面/sdd/redetr_m3fd/m3fd_class'
-    save_path = 'runs'
+    dataset_path = 'M3FDv3_'
+    save_path = 'run'
     batch_size = 32
     workers = 8
     lr = 0.001
