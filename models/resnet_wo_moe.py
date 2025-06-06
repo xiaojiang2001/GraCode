@@ -110,10 +110,11 @@ class ResNetWithMOE(nn.Module):
         self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
         self.conv3 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
         self.conv4 = nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1)
-        # self.moe1 = MoEAdapter_shallow()
-        # self.moe2 = MoEAdapter(input_channels=32, output_channels=32, num_experts=2)
-        # self.moe3 = MoEAdapter(input_channels=64, output_channels=64, num_experts=2)
-        # self.moe4 = MoEAdapter(input_channels=128, output_channels=128, num_experts=2)
+        # 混合专家模型
+        self.moe1 = MoEAdapter_shallow()
+        self.moe2 = MoEAdapter(input_channels=32, output_channels=32, num_experts=2)
+        self.moe3 = MoEAdapter(input_channels=64, output_channels=64, num_experts=2)
+        self.moe4 = MoEAdapter(input_channels=128, output_channels=128, num_experts=2)
 
     def forward(self, x, vi=False):
         x = self.conv1(x)
@@ -181,10 +182,12 @@ class ResNetSegmentationModelWithMoE(nn.Module):
 
     def forward(self, vi, ir):
         vi_img, ir_img = vi, ir
+        # 特征提取
         vi, vi3, vi2, vi1 = self.resnet(vi, vi=True)
         ir, ir3, ir2, ir1 = self.resnet(ir)
 
         #print(vi1.shape, vi2.shape, vi3.shape, vi4.shape, vi_last.shape)
+        # 拼接
         x = torch.cat([vi,ir],dim=1)
         # x = self.fusion_module(x)
         #x = torch.cat([self.cross(x, feature), x], dim=1)

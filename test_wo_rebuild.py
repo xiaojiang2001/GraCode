@@ -42,6 +42,7 @@ if __name__ == '__main__':
 
 
 
+    
     ##########加载数据
     test_tqdm = tqdm(test_loader, total=len(test_loader))
     with torch.no_grad():

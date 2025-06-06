@@ -1,6 +1,6 @@
 import os
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import random
 import torch.nn.functional as F
 import numpy as np
@@ -12,7 +12,7 @@ from dataloder.data_loder import llvip
 from models.resnet_wo_moe import ResNetSegmentationModelWithMoE
 from models.cls_model import CLIPClassifier
 from scripts.losses import fusion_loss
-from contrastive import contrastive_loss
+# from contrastive import contrastive_loss
 import torch.nn as nn
 loss_base = fusion_loss()
 criterion = nn.CrossEntropyLoss()
@@ -32,8 +32,8 @@ loss_cal = fusion_loss()
 
 if __name__ == '__main__':
     init_seeds(2222)
-    datasets = '/home/dell/桌面/sdd/loramoe/M3FDv3_'
-    save_path = 'runs/'
+    datasets = 'M3FDv3_'
+    save_path = 'run/'
     fusion_model = ResNetSegmentationModelWithMoE().cuda()
     cls_model = CLIPClassifier(4).cuda()
     # 加载多卡模型权重，移除 'module.' 前缀
@@ -101,7 +101,7 @@ if __name__ == '__main__':
                 _, feature_vi_rain = cls_model(vis_rain224)
                 #print(label.shape, seg.shape)
                 loss_seg = criterion(seg.float(), label)
-                loss_con = contrastive_loss(feature_vi, feature_vi_gt, feature_vi_rain, feature_vi_rain)
+                # loss_con = contrastive_loss(feature_vi, feature_vi_gt, feature_vi_rain, feature_vi_rain)
                 loss_vi = F.l1_loss(vis_gt, vi)
                 loss_ir = F.l1_loss(inf_image, ir)
                 loss_f = loss_cal(vis_gt, inf_image, fusion)
@@ -122,7 +122,7 @@ if __name__ == '__main__':
                 loss_vis=loss_vi.item(),
                 loss_inf=loss_ir.item(),
                 loss_f=loss_f.item(),
-                loss_con=loss_con.item(),
+                #loss_con=loss_con.item(),
                 loss_seg=loss_seg.item(),
                 lr=optimizer.param_groups[0]['lr']  # 显示当前学习率
             )

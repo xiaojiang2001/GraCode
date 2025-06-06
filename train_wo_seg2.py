@@ -1,6 +1,6 @@
 import os
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import random
 import torch.nn.functional as F
 import numpy as np
@@ -12,7 +12,7 @@ from dataloder.data_loder import llvip_wo_seg as llvip
 from models.resnet import ResNetSegmentationModelWithMoE
 from models.cls_model import CLIPClassifier
 from scripts.losses import fusion_loss
-from contrastive import contrastive_loss
+#from contrastive import contrastive_loss
 import torch.nn as nn
 loss_base = fusion_loss()
 criterion = nn.CrossEntropyLoss()
@@ -32,8 +32,8 @@ loss_cal = fusion_loss()
 
 if __name__ == '__main__':
     init_seeds(2222)
-    datasets = 'M3FDv3_choose'
-    save_path = 'runs/'
+    datasets = 'M3FDv3_'
+    save_path = 'run/'
     fusion_model = ResNetSegmentationModelWithMoE().cuda()
     cls_model = CLIPClassifier(4).cuda()
     # 加载多卡模型权重，移除 'module.' 前缀

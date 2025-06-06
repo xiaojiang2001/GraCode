@@ -27,7 +27,9 @@ class DehazeNet(nn.Module):
 
         # 用于估计大气光值的特征池化
         #(x.shape)
+        # 将特征图池化到32x32
         pooled = F.adaptive_avg_pool2d(x, (32, 32))
+        # 将特征图展平
         pooled = pooled.view(pooled.size(0), -1)  # flatten
         #print(pooled.shape)
         A = torch.sigmoid(self.fc1(pooled))
@@ -50,4 +52,8 @@ def dehaze_image(hazy_image, transmission, A, t0=0.1):
     #dehazed_image = torch.clamp(dehazed_image, 0, 1)  # 确保像素值在[0,1]范围内
 
     return dehazed_image
+
+if __name__ == '__main__':
+    print(torch.cuda.is_available())
+
 

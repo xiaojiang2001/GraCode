@@ -52,11 +52,12 @@ class MoEAdapter(nn.Module):
 from models.deal.dehaze import DehazeNet, dehaze_image
 from models.deal.low_enhance import Low_enhance_net, low_enhance_image
 
+# 基于先验知识的退化机制
 class MoEAdapter_shallow(nn.Module):
     def __init__(self, top_k=2):
         super(MoEAdapter_shallow, self).__init__()
-        self.dehazenet = DehazeNet()
-        self.lownet = Low_enhance_net() #zero dce
+        self.dehazenet = DehazeNet()    # 雾霾 大气层模型 投射率和光照强度
+        self.lownet = Low_enhance_net() # zero dce   低光照增强   亮度调节曲线   暗的信号点到亮的信号点
         self.experts = nn.Conv2d(in_channels=16, out_channels=16, kernel_size=1, stride=1, padding=0)
 
         # 门控网络
@@ -110,8 +111,9 @@ class ResNetWithMOE(nn.Module):
         self.conv2 = feature_exbase(16, 32)
         self.conv3 = feature_exbase(32, 64)
         self.conv4 = feature_exbase(64, 128)
+        # 混合专家模型
         self.moe1 = MoEAdapter_shallow()
-        self.moe2 = MoEAdapter(input_channels=32, output_channels=32, num_experts=4) #混合专家模型
+        self.moe2 = MoEAdapter(input_channels=32, output_channels=32, num_experts=4)
         self.moe3 = MoEAdapter(input_channels=64, output_channels=64, num_experts=4)
         self.moe4 = MoEAdapter(input_channels=128, output_channels=128, num_experts=4)
 
@@ -205,13 +207,13 @@ class ResNetSegmentationModelWithMoE(nn.Module):
 
         return fusion, fusion, vi, ir, seg
 
-# # # 示例输入（假设输入是3通道图像，尺寸为256x256）
-# if __name__ == '__main__':
-#
-#     input_image = torch.randn(1, 3, 640, 480).cuda()
-#     feature = torch.rand(1,512).cuda()
-#
-#     # 创建带MoE优化的ResNet分割模型并进行前向传播
-#     model = ResNetSegmentationModelWithMoE(num_classes=9).cuda()
-#     output = model(input_image, input_image, feature)
+# # 示例输入（假设输入是3通道图像，尺寸为256x256）
+if __name__ == '__main__':
+
+    input_image = torch.randn(1, 3, 640, 480).cuda()
+    feature = torch.rand(1,512).cuda()
+
+    # 创建带MoE优化的ResNet分割模型并进行前向传播
+    model = ResNetSegmentationModelWithMoE(num_classes=9).cuda()
+    output = model(input_image, input_image, feature)
 
