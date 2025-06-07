@@ -66,9 +66,10 @@ if __name__ == '__main__':
 
     scaler = torch.cuda.amp.GradScaler()
 
-    # fusion_model.load_state_dict(torch.load('runs/fusion_25.pth'))
+    #fusion_model.load_state_dict(torch.load('runs/fusion_25.pth'))
 
     fusion_model.train()
+    best_loss = 1e5
     for epoch in range(Epoch):
         if epoch < Epoch // 2:
             lr = lr
@@ -93,7 +94,7 @@ if __name__ == '__main__':
 
                 _, fusion, vi, ir, seg = fusion_model(vis_rain, inf_image)
                 #print(label.shape, seg.shape)
-                loss_seg = criterion(seg.float(), label)
+                loss_seg = criterion(seg.float(), label)    # 分割损失
                 loss_vi = F.l1_loss(vis_gt, vi)
                 loss_ir = F.l1_loss(inf_image, ir)
                 loss_f = loss_cal(vis_gt, inf_image, fusion)
@@ -114,7 +115,10 @@ if __name__ == '__main__':
                 loss_vis=loss_vi.item(),
                 loss_inf=loss_ir.item(),
                 loss_f=loss_f.item(),
-                loss_seg=loss_seg.item(),
+                # loss_seg=loss_seg.item(),
                 lr=optimizer.param_groups[0]['lr']  # 显示当前学习率
             )
+        if(loss < best_loss):
+            best_loss = loss
+            torch.save(fusion_model.state_dict(), f'{save_path}/best.pth')
         torch.save(fusion_model.state_dict(), f'{save_path}/funetune.pth')

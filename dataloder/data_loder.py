@@ -6,7 +6,7 @@ from torch.utils import data
 from torchvision import transforms
 import torch
 to_tensor = transforms.Compose([transforms.ToTensor()])
-
+SIZE = (640,512)
 
 
 class llvip(data.Dataset):
@@ -69,10 +69,10 @@ class llvip(data.Dataset):
     def __getitem__(self, index):
         name = self.name_list[index]  # 获得当前图片的名称
 
-        inf_image = Image.open(os.path.join(self.inf_path, name))
-        vis_rain = Image.open(os.path.join(self.vis_rain, name))
-        vis_gt = Image.open(os.path.join(self.vis_gt, name))
-        seg_image = Image.open(os.path.join(self.seg_path, name))
+        inf_image = Image.open(os.path.join(self.inf_path, name)).resize(SIZE)
+        vis_rain = Image.open(os.path.join(self.vis_rain, name)).resize(SIZE)
+        vis_gt = Image.open(os.path.join(self.vis_gt, name)).resize(SIZE)
+        seg_image = Image.open(os.path.join(self.seg_path, name)).resize(SIZE)
 
         inf_image224 = Image.open(os.path.join(self.inf_path, name)).resize((224,224))
         vis_rain224 = Image.open(os.path.join(self.vis_rain, name)).resize((224,224))

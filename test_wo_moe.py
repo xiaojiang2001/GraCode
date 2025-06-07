@@ -12,6 +12,32 @@ import numpy as np
 from PIL import Image
 
 
+def load_model_weights(model, weights_path):
+    try:
+        # 加载权重文件
+        state_dict = torch.load(weights_path)
+        
+        # 获取模型当前的状态字典
+        model_dict = model.state_dict()
+        
+        # 过滤出匹配的权重
+        matched_dict = {k: v for k, v in state_dict.items() if k in model_dict}
+        
+        # 打印匹配情况
+        print(f"成功匹配的权重数: {len(matched_dict)}")
+        print(f"模型总参数数: {len(model_dict)}")
+        print(f"权重文件参数数: {len(state_dict)}")
+        
+        # 更新模型权重
+        model_dict.update(matched_dict)
+        model.load_state_dict(model_dict, strict=False)
+        
+        return True
+    except Exception as e:
+        print(f"加载权重时出错: {str(e)}")
+        return False
+
+
 if __name__ == '__main__':
     print(torch.cuda.is_available())
 
@@ -28,14 +54,17 @@ if __name__ == '__main__':
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    if not os.path.exists(save_path):
-        os.makedirs(save_path)
-
     model = ResNetSegmentationModelWithMoE().cuda()
     test_epoch = 0
-    model.load_state_dict(torch.load(f'runs/fusion_wo_moe.pth'))
+    
+    # 使用新的加载函数
+    if load_model_weights(model, 'runs/fusion_wo_moe.pth'):
+        print("权重加载成功")
+    else:
+        print("权重加载失败")
+        exit(1)
+        
     model.eval()
-
 
     ##########加载数据
     test_tqdm = tqdm(test_loader, total=len(test_loader))
@@ -50,7 +79,6 @@ if __name__ == '__main__':
                     inf_image = torch.cat([inf_image]*3, dim=1)
                 fusion, _, _, _, _ = model(vis_rain, inf_image)
                 fused = torch.clamp(fusion, min=0.00001, max=1)
-
 
             rgb_fused_image = transforms.ToPILImage()(fused[0])
             rgb_fused_image.save(f'{save_path}/{name[0]}')

@@ -5,5 +5,4 @@ test/*
 test.zip
 runs/
 runs/*
-*.pth
 *.zip

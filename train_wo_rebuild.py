@@ -101,7 +101,7 @@ if __name__ == '__main__':
                 _, feature_vi_rain = cls_model(vis_rain224)
                 #print(label.shape, seg.shape)
                 loss_seg = criterion(seg.float(), label)
-                loss_con = contrastive_loss(feature_vi, feature_vi_gt, feature_vi_rain, feature_vi_rain)
+                # loss_con = contrastive_loss(feature_vi, feature_vi_gt, feature_vi_rain, feature_vi_rain)
                 loss_f = loss_cal(vis_gt, inf_image, fusion)
                 loss = loss_f + loss_seg
 
@@ -118,7 +118,7 @@ if __name__ == '__main__':
                 epoch=epoch,
                 loss=loss.item(),
                 loss_f=loss_f.item(),
-                loss_con=loss_con.item(),
+                # loss_con=loss_con.item(),
                 loss_seg=loss_seg.item(),
                 lr=optimizer.param_groups[0]['lr']  # 显示当前学习率
             )
