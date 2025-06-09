@@ -44,7 +44,7 @@ if __name__ == '__main__':
     batch_size = 1
     num_works = 1
     datastes = 'test/LLVIP'
-    save_path = os.path.join(datastes, 'wo_moe')
+    save_path = os.path.join(datastes, 'wo_moe_myself')
 
     test_dataset = llvip(data_dir=datastes)
     test_loader = DataLoader(
@@ -58,12 +58,8 @@ if __name__ == '__main__':
     test_epoch = 0
     
     # 使用新的加载函数
-    if load_model_weights(model, 'runs/fusion_wo_moe.pth'):
-        print("权重加载成功")
-    else:
-        print("权重加载失败")
-        exit(1)
-        
+    model.load_state_dict(torch.load(f'run/2080/fusion_wo_moe.pth'))
+    # load_model_weights(model, 'runs/fusion_wo_moe.pth')
     model.eval()
 
     ##########加载数据

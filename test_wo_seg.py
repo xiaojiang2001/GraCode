@@ -35,7 +35,8 @@ if __name__ == '__main__':
 
     model = ResNetSegmentationModelWithMoE().cuda()
     test_epoch = 0
-    model.load_state_dict(torch.load(f'runs/fusion_wo_seg.pth'))
+    # model.load_state_dict(torch.load(f'runs/fusion_wo_seg.pth'))
+    load_model_weights(model, 'runs/fusion_wo_moe.pth')
     model.eval()
 
 

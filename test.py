@@ -16,7 +16,7 @@ if __name__ == '__main__':
     batch_size = 1
     num_works = 1
     datastes = 'test/EMS'
-    save_path = os.path.join(datastes, 'myself')
+    save_path = os.path.join(datastes, 'funetune')
 
     test_dataset = llvip(data_dir=datastes)
     test_loader = DataLoader(
@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     model = ResNetSegmentationModelWithMoE().cuda()
     test_epoch = 0
-    model.load_state_dict(torch.load(f'run/best.pth'))
+    model.load_state_dict(torch.load(f'run/funetune.pth'))
     model.eval()
 
     ##########加载数据

@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 import random
 import torch.nn.functional as F
 import numpy as np
@@ -16,6 +16,7 @@ import torch.nn as nn
 
 loss_base = fusion_loss()
 criterion = nn.CrossEntropyLoss()
+
 
 def init_seeds(seed=0):
     # Initialize random number generator (RNG) seeds
@@ -34,7 +35,10 @@ if __name__ == '__main__':
     init_seeds(2222)
     datasets = 'M3FDv3_'
     save_path = 'run/'
-    fusion_model = ResNetSegmentationModelWithMoE().cuda()
+    fusion_model = ResNetSegmentationModelWithMoE()
+    fusion_model = nn.DataParallel(fusion_model)  # 自动使用 os.environ 中可见的所有 GPU
+    fusion_model = fusion_model.cuda()
+
     cls_model = CLIPClassifier(4).cuda()
     # 加载多卡模型权重，移除 'module.' 前缀
     state_dict = torch.load('runs/best_cls.pth')
