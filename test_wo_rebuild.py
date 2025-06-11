@@ -43,7 +43,7 @@ if __name__ == '__main__':
     batch_size = 1
     num_works = 1
     datastes = 'test/LLVIP'
-    save_path = os.path.join(datastes, 'wo_rebuild')
+    save_path = os.path.join(datastes, 'wo_rebuild_myself')
 
     test_dataset = llvip(data_dir=datastes)
     test_loader = DataLoader(
@@ -58,14 +58,14 @@ if __name__ == '__main__':
 
     model = ResNetSegmentationModelWithMoE().cuda()
     test_epoch = 0
-
+    model.load_state_dict(torch.load(f'run/3090/fusion_wo_rebuild.pth'))
     
-    # 使用新的加载函数
-    if load_model_weights(model, 'runs/fusion_wo_rebuild.pth'):
-        print("权重加载成功")
-    else:
-        print("权重加载失败")
-        exit(1)
+    # # 使用新的加载函数
+    # if load_model_weights(model, 'runs/fusion_wo_rebuild.pth'):
+    #     print("权重加载成功")
+    # else:
+    #     print("权重加载失败")
+    #     exit(1)
 
     model.eval()
     

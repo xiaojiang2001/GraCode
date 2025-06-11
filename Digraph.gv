@@ -1,0 +1,48 @@
+// ResNet with MoE Architecture
+digraph {
+	rankdir=TB
+	input_vi [label="Visible Input
+(3 channels)"]
+	input_ir [label="Infrared Input
+(3 channels)"]
+	subgraph cluster_0 {
+		label="ResNetWithMOE Branch"
+		conv1_vi [label="Conv1
+(16 channels)"]
+		moe1 [label=MoEAdapter_shallow]
+		conv2_vi [label="Conv2
+(32 channels)"]
+		moe2 [label=MoEAdapter]
+		conv3_vi [label="Conv3
+(64 channels)"]
+		moe3 [label=MoEAdapter]
+		conv4_vi [label="Conv4
+(128 channels)"]
+		moe4 [label=MoEAdapter]
+	}
+	concat [label=Concatenate]
+	conv_block4 [label="Conv Block 4
+(256->128)"]
+	conv_block5 [label="Conv Block 5
+(128->64)"]
+	seg_head [label="Segmentation Head"]
+	fusion_head [label="Fusion Head"]
+	decode_vi [label="Decode VI"]
+	decode_ir [label="Decode IR"]
+	input_vi -> conv1_vi
+	conv1_vi -> moe1
+	moe1 -> conv2_vi
+	conv2_vi -> moe2
+	moe2 -> conv3_vi
+	conv3_vi -> moe3
+	moe3 -> conv4_vi
+	conv4_vi -> moe4
+	moe4 -> concat
+	input_ir -> conv1_vi
+	concat -> conv_block4
+	conv_block4 -> conv_block5
+	conv_block5 -> seg_head
+	conv_block5 -> fusion_head
+	conv_block5 -> decode_vi
+	conv_block5 -> decode_ir
+}

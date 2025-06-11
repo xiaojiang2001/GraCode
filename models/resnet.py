@@ -67,11 +67,11 @@ class MoEAdapter_shallow(nn.Module):
 
     def forward(self, x):
         # 专家输出
-        tx, a = self.dehazenet(x)
-        r = self.lownet(x)
-        x1 = dehaze_image(x, tx, a) + x  # zero dce
-        x2 = low_enhance_image(x, r) + x
-        x3 = self.experts(x)
+        tx, a = self.dehazenet(x)   # tx: 投射率, a: 光照强度
+        r = self.lownet(x)          # r: 亮度调节曲线
+        x1 = dehaze_image(x, tx, a) + x  # 使用大气层模型去雾图像
+        x2 = low_enhance_image(x, r) + x    # 低光照增强模型亮度增强图像
+        x3 = self.experts(x)                # 直接使用卷积作为专家输出
         expert_outputs = torch.stack([x1, x2, x3], dim=1)  # Shape: (B, 3, C, H, W)
 
         # 门控网络生成权重
@@ -91,6 +91,7 @@ class MoEAdapter_shallow(nn.Module):
         return self.leaky_relu(weighted_sum)
 
 #----------写一个融合网络，不使用ResNet------------------#
+# 特征提取网络
 class feature_exbase(nn.Module):
     def __init__(self, in_channel, out_channel):
         super(feature_exbase, self).__init__()
@@ -101,9 +102,8 @@ class feature_exbase(nn.Module):
         x = self.conv(x)
         x = act(x)
         return x
-
-
-
+    
+# 融合网络
 class ResNetWithMOE(nn.Module):
     def __init__(self):
         super(ResNetWithMOE, self).__init__()
@@ -132,13 +132,10 @@ class ResNetWithMOE(nn.Module):
         x = self.moe4(x) + x
         return x, y3, y2, y1
 
-
-
 class ResNetSegmentationModelWithMoE(nn.Module):
     def __init__(self):
         super(ResNetSegmentationModelWithMoE, self).__init__()
 
-        # 加载预训练的ResNet50模型，并去掉最后的全连接层
         self.resnet = ResNetWithMOE()
 
         # 定义卷积块（包含卷积和激活函数）
