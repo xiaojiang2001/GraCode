@@ -176,10 +176,10 @@ if __name__ == "__main__":
     image_dir = "./cat"  # 图片所在目录
     image_paths = [os.path.join(image_dir, f"{i}.jpg") for i in range(1, 4)]  # 获取1.jpg到3.jpg的路径
 
-    # 水平拼接
-    result_h = image_concat(image_paths, direction='horizontal', resize=True, target_size=(400, 300))
-    if result_h is not None:
-        cv2.imshow('Horizontal Concatenation', result_h)
+    # # 水平拼接
+    # result_h = image_concat(image_paths, direction='horizontal', resize=True, target_size=(400, 300))
+    # if result_h is not None:
+    #     cv2.imshow('Horizontal Concatenation', result_h)
         # cv2.imwrite('horizontal_result.jpg', result_h)  # 保存结果
     
     # 垂直拼接
@@ -191,6 +191,7 @@ if __name__ == "__main__":
     # 使用OpenCV内置的Stitcher
     print("使用OpenCV Stitcher进行拼接...")
     panorama1 = stitch_images(image_paths)
+    panorama1 = cv2.resize(panorama1, (900, 400))  # 调整全景图大小
     if panorama1 is not None:
         cv2.imshow('Panorama (OpenCV Stitcher)', panorama1)
         cv2.imwrite('panorama_opencv.jpg', panorama1)
@@ -198,6 +199,7 @@ if __name__ == "__main__":
     # 使用特征匹配的方式
     print("使用特征匹配方式进行拼接...")
     panorama2 = stitch_images_with_features(image_paths)
+    panorama2 = cv2.resize(panorama2, (900, 400))  # 调整全景图大小
     if panorama2 is not None:
         cv2.imshow('Panorama (Feature Matching)', panorama2)
         cv2.imwrite('panorama_features.jpg', panorama2)
